@@ -1,12 +1,224 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Home - Sala de Video</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 </head>
+
 <body>
-    Home
+    <header>
+        <button type="button" class="clear btn2" onclick="logout()">
+            Sair
+        </button>
+    </header>
+    
+    <section>
+        <h1 style="background-color:azure; width: 100px; margin-left: 250px;">Videos</h1>
+        <p style="background-color:azure; width: 100px; margin-right: 15px; margin-bottom: 10px;">Para Limpar a barra selecione o n° 0</p>
+        <form id="yt-form" method="post">
+            <p><input type="text" id="keyword-input" placeholder="Digite o sua pesquisa..." required></p>
+            <p><input type="number" id="maxresult-input" placeholder="Maximo" min="0" max="50" required></p>
+            <p>
+                <select id="order-input" required>
+                    <option value="">--Selecione prefeferência--</option>
+                    <option value="date">Data</option>
+                    <option value="rating">Avaliação</option>
+                    <option value="relevance">Relevancia</option>
+                    <option value="title">Titulo</option>
+                    <option value="viewCount" selected>Visualizações</option>
+                </select>
+            </p>
+            <p>
+                <input type="submit" class="btn zoom-shadow" value="Pesquisar">
+            </p>
+        </form>
+       
+        <div id="videoListContainer"></div>
+
+    </section>
+    <section>
+        <!-- <input type="file" class="form-control-file" id="vid" name="vid" accept="video/*" required>
+        <div class="invalid-feedback">Campo Obrigatório.</div>
+
+        <div id="embed-video" style="text-align:center;">
+        <video width="480" controls autoplay >
+            <source src="" id="video_here">
+                Seu navegador não suporta vídeo HTML5.
+        </video> 
+        </div>-->
+        <form id="form-cliente">
+
+            <textarea name="comprovante" placeholder="Descrição..."></textarea>
+
+            <input type="file" name="arquivo" />
+
+            <input type="submit" class="btn zoom-shadow" name="acao" value="Enviar!" />
+            <div class="container-pedidos">
+
+            </div>
+
+        </form>
+    </section>
+
 </body>
+
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="home.css">
+
+<!-- API YOUTUBE -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <script src="api.js"></script>
+<!-- FINAL API YOUTUBE -->
+
+<!-- <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js"></script> -->
+
+<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-auth.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-firestore.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-storage.js"></script>
+<script src="../../firebase.js"></script>
+<script src="../../guarda.js"></script>
+<script src="home.js"></script>
+
+<!--Script Firebase-->
+
+    <script>
+        
+
+        // Your web app's Firebase configuration
+
+        // var firebaseConfig = {
+        // apiKey: "AIzaSyCn_DF2pSQUtvjU81t5FE9hAf7K2kniyy4",
+        // authDomain: "projeto1-3d1dd.firebaseapp.com",
+        // databaseURL: "https://projeto1-3d1dd-default-rtdb.firebaseio.com",
+        // projectId: "projeto1-3d1dd",
+        // storageBucket: "projeto1-3d1dd.appspot.com",
+        // messagingSenderId: "839293325796",
+        // appId: "1:839293325796:web:6a410fa98b58ecd61237f1"
+        // };
+
+        // // Initialize Firebase
+
+        // firebase.initializeApp(firebaseConfig);
+
+
+
+        const storage = firebase.storage();
+
+        const db = firebase.firestore();
+
+
+
+        const formCliente = document.querySelector('#form-cliente');
+
+
+
+        formCliente.addEventListener('submit',(e)=>{
+
+            e.preventDefault();
+
+
+
+            let comprovanteText = document.querySelector('[name=comprovante]').value;
+
+            let arquivo = document.querySelector('[name=arquivo]').files[0];
+
+
+
+            const uploadTask = storage.ref('documentos/'+arquivo.name).put(arquivo);
+
+
+
+            uploadTask.on('state_changed',(snapshot)=>{
+
+                const progress = (snapshot.bytesTransferred/snapshot.totalBytes) * 1;
+
+                console.log(progress);
+
+            },
+
+            function(error){
+
+
+
+            },
+
+
+
+            function(){
+
+                storage.ref('documentos/'+arquivo.name).getDownloadURL().then((url)=>{
+
+                    db.collection('documentos').add({
+
+                        descricao: comprovanteText,
+
+                        arquivoURL: url
+
+                    })
+
+                })
+
+            }
+
+            
+
+            )
+
+
+
+            
+
+            
+
+        })
+
+        db.collection('documentos').onSnapshot((data)=>{
+
+        let list = document.querySelector('.container-pedidos');
+
+        list.innerHTML = "";
+
+        data.docs.map((val)=>{
+
+            list.innerHTML+=`
+
+            
+
+                <div style="background-color:white;padding:20px;margin-bottom:20px;text-align:left;" class="container-single-pedido">
+
+                    <p><b>Descrição:</b>${val.data().descricao}</p>
+
+                    <p style="vertical-align:middle;"><b>Arquivo Anexado:</b>  <video width="480" controls >
+                        <source src="${val.data().arquivoURL}" id="video_here">
+                            Seu navegador não suporta vídeo HTML5.
+                    </video>
+                    </p> 
+
+                </div>
+
+                <hr>
+
+            
+
+            `;
+
+        })
+
+        })
+
+
+    </script>
+
 </html>

@@ -1,3 +1,4 @@
+
 function onChangeEmail() {
     toggleButtonsDisable();
     toggleEmailErrors();
@@ -9,15 +10,17 @@ function onChangePassword() {
 }
 
 function login() {
+    showLoading();
     firebase.auth().signInWithEmailAndPassword(
         form.email().value, form.password().value
     ).then(response => {
+        hideLoading();
         window.location.href = "pages/home/home.html";
     }).catch(error => {
+        hideLoading();
         alert(getErrorMessage(error));
     });
-    
-    //window.location.href = "pages/home/home.html";
+
 }
 
 function getErrorMessage(error) {
@@ -29,6 +32,17 @@ function getErrorMessage(error) {
 
 function register() {
     window.location.href = "pages/register/register.html";
+}
+
+function recoverPassword() {
+    showLoading();
+    firebase.auth().sendPasswordResetEmail(form.email().value).then(() => {
+        hideLoading();
+        alert('Email enviado com sucesso');
+    }).catch(error => {
+        hideLoading();
+        alert(getErrorMessage(error));
+    });
 }
 
 function toggleEmailErrors() {
