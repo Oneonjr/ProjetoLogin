@@ -8,6 +8,8 @@ function onChangeEmail() {
     toggleRegisterButtonDisable();
 }
 
+
+
 function onChangePassword() {
     const password = form.password().value;
     form.passwordRequiredError().style.display = password ? "none" : "block";
@@ -23,6 +25,7 @@ function onChangeConfirmPassword() {
     toggleRegisterButtonDisable();
 }
 
+//confirmando o registro.
 function register() {
     showLoading();
 
@@ -39,6 +42,7 @@ function register() {
     })
 }
 
+//verificando email.
 function getErrorMessage(error) {
     if (error.code == "auth/email-already-in-use") {
         return "Email já está em uso";
@@ -46,6 +50,7 @@ function getErrorMessage(error) {
     return error.message;
 }
 
+//verificando senha.
 function validatePasswordsMatch() {
     const password = form.password().value;
     const confirmPassword = form.confirmPassword().value;
@@ -57,7 +62,7 @@ function validatePasswordsMatch() {
 function toggleRegisterButtonDisable() {
     form.registerButton().disabled = !isFormValid();
 }
-
+//validando formulario.
 function isFormValid() {
     const email = form.email().value;
     if (!email || !validateEmail(email)) {

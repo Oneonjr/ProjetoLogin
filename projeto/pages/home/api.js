@@ -1,3 +1,6 @@
+// Codigo js da api do youtube.
+
+
 gapi.load("client", loadClient);
   
 function loadClient() {
@@ -25,7 +28,7 @@ function paginate(e, obj) {
     execute();
 }
   
-// Make sure the client is loaded before calling this method.
+// Verificar se o client está carregando antes de executar esse codigo.
 function execute() {
     const searchString = keywordInput.value;
     const maxresult = maxresultInput.value;
@@ -45,7 +48,7 @@ function execute() {
   
     return gapi.client.youtube.search.list(arr_search)
     .then(function(response) {
-        // Handle the results here (response.result has the parsed body).
+        //lidando com os resultados. (response.result tem o body analisado.).
         const listItems = response.result.items;
         if (listItems) {
             let output = '<h4>Videos</h4><ul>';
@@ -67,7 +70,7 @@ function execute() {
                 output += `<a href="#" class="paginate" data-id="${response.result.nextPageToken}" onclick="paginate(event, this)">Next</a>`;
             }
   
-            // Output list
+            // lista de saida.
             videoList.innerHTML = output;
         }
     },

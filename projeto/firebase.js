@@ -1,3 +1,5 @@
+
+//para diminuir o codigo criei uma pasta para esse bloco.
 const firebaseConfig = {
     apiKey: "AIzaSyCn_DF2pSQUtvjU81t5FE9hAf7K2kniyy4",
     authDomain: "projeto1-3d1dd.firebaseapp.com",

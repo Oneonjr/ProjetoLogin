@@ -9,6 +9,8 @@ function onChangePassword() {
     togglePasswordErrors();
 }
 
+
+//Fazendo login
 function login() {
     showLoading();
     firebase.auth().signInWithEmailAndPassword(
@@ -23,6 +25,7 @@ function login() {
 
 }
 
+
 function getErrorMessage(error) {
     if (error.code == "auth/user-not-found") {
         return "Usuário nao encontrado";
@@ -30,10 +33,14 @@ function getErrorMessage(error) {
     return error.message;
 }
 
+
+//Regristrar.
 function register() {
     window.location.href = "pages/register/register.html";
 }
 
+
+//recuperação de senha.
 function recoverPassword() {
     showLoading();
     firebase.auth().sendPasswordResetEmail(form.email().value).then(() => {
@@ -45,6 +52,8 @@ function recoverPassword() {
     });
 }
 
+
+//erro email.
 function toggleEmailErrors() {
     const email = form.email().value;
     form.emailRequiredError().style.display = email ? "none" : "block";
@@ -52,10 +61,14 @@ function toggleEmailErrors() {
     form.emailInvalidError().style.display = validateEmail(email) ? "none" : "block";
 }
 
+
+//erro senha.
 function togglePasswordErrors() {
     const password = form.password().value;
     form.passwordRequiredError().style.display = password ? "none" : "block";
 }
+
+//Desabilitando botão
 
 function toggleButtonsDisable() {
     const emailValid = isEmailValid();
@@ -65,6 +78,7 @@ function toggleButtonsDisable() {
     form.loginButton().disabled = !emailValid || !passwordValid;
 }
 
+//checando email.
 function isEmailValid() {
     const email = form.email().value;
     if (!email) {
@@ -73,6 +87,8 @@ function isEmailValid() {
     return validateEmail(email);
 }
 
+
+//checando senha.
 function isPasswordValid() {
     return form.password().value ? true : false;
 }
